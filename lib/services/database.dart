@@ -1,4 +1,3 @@
-// lib/services/database.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -18,8 +17,6 @@ class DatabaseMethods {
   }
 
   Future<Stream<QuerySnapshot>> getPosts() async {
-    // Za ovo će trebati indeks ako kombiniraš where + orderBy negdje drugdje,
-    // ali ovdje je samo orderBy CreatedAt.
     return _db
         .collection("Posts")
         .orderBy('CreatedAt', descending: true)
@@ -51,13 +48,6 @@ class DatabaseMethods {
         .snapshots();
   }
 
-  Future<Stream<QuerySnapshot>> getPostsPlace(String place) async {
-    return _db
-        .collection("Posts")
-        .where("CityName", isEqualTo: place)
-        .snapshots();
-  }
-
   Future<QuerySnapshot> search(String updatedname) async {
     return await _db
         .collection("Location")
@@ -68,19 +58,14 @@ class DatabaseMethods {
         .get();
   }
 
-  // =========================
-  // PROPAGACIJA PROFILA (OwnerUid)
-  // =========================
-
   Future<Map<String, int>> propagateUserProfileUpdates({
-    required String userId, // Firebase UID
+    required String userId,
     required String newName,
     required String? newImage,
   }) async {
     final Set<DocumentReference> postRefs = {};
     final Set<DocumentReference> commentRefs = {};
 
-    // POSTS: svi postovi gdje je autor = OwnerUid
     final postsByOwner =
         await _db
             .collection('Posts')
@@ -88,7 +73,6 @@ class DatabaseMethods {
             .get();
     postRefs.addAll(postsByOwner.docs.map((d) => d.reference));
 
-    // COMMENTS: svi komentari (collectionGroup) gdje je autor = OwnerUid
     final commentsByOwner =
         await _db
             .collectionGroup('Comment')
@@ -96,13 +80,11 @@ class DatabaseMethods {
             .get();
     commentRefs.addAll(commentsByOwner.docs.map((d) => d.reference));
 
-    // payload (MIJENJAMO samo prikazna polja)
     final payload = <String, dynamic>{
       'UserName': newName,
       if (newImage != null && newImage.isNotEmpty) 'UserImage': newImage,
     };
 
-    // batch u chunkovima
     Future<int> _updateInBatches(
       Set<DocumentReference> refs,
       Map<String, dynamic> data,
@@ -144,8 +126,6 @@ class DatabaseMethods {
   }
 }
 
-// ====== Helper funkcije (ako ih koristiš negdje) ======
-
 Future<Stream<QuerySnapshot>> getPostsByUser(String ownerUid) async {
   return FirebaseFirestore.instance
       .collection("Posts")
@@ -157,16 +137,13 @@ Future<Stream<QuerySnapshot>> getPostsByUser(String ownerUid) async {
 Future<void> deletePostWithComments(String postId) async {
   final db = FirebaseFirestore.instance;
 
-  // obriši komentare
   final comments =
       await db.collection('Posts').doc(postId).collection('Comment').get();
   for (final d in comments.docs) {
     await d.reference.delete();
   }
-  // obriši post
   await db.collection('Posts').doc(postId).delete();
 
-  // obriši sliku iz storage-a (ako postoji)
   try {
     await FirebaseStorage.instance
         .ref()

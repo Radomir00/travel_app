@@ -84,7 +84,7 @@ class _EditPostPageState extends State<EditPostPage> {
     final caption = _captionCtrl.text.trim();
 
     if (place.isEmpty || city.isEmpty || caption.isEmpty) {
-      _showSnack(Colors.red, "Sva polja su obavezna");
+      _showSnack(Colors.red, "All fields are required");
       return;
     }
 
@@ -92,7 +92,6 @@ class _EditPostPageState extends State<EditPostPage> {
     try {
       String? newUrl = _imageUrl;
       if (_pickedImage != null) {
-        // overwrite na istu putanju blogImage/{postId}
         final ref = FirebaseStorage.instance
             .ref()
             .child('blogImage')
@@ -111,11 +110,11 @@ class _EditPostPageState extends State<EditPostPage> {
             if (newUrl != null) "Image": newUrl,
           });
 
-      _showSnack(Colors.green, "Objava ažurirana");
+      _showSnack(Colors.green, "Post updated");
       if (!mounted) return;
       Navigator.pop(context);
     } catch (e) {
-      _showSnack(Colors.red, "Neuspjelo ažuriranje");
+      _showSnack(Colors.red, "Update failed");
     } finally {
       if (mounted) setState(() => _saving = false);
     }

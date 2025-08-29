@@ -69,16 +69,13 @@ class _CommentPageState extends State<CommentPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: Colors.green,
-          content: Text("Komentar obrisan"),
+          content: Text("Comment deleted"),
         ),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: Text("Greška pri brisanju: $e"),
-        ),
+        SnackBar(backgroundColor: Colors.red, content: Text("Error: $e")),
       );
     }
   }
@@ -149,7 +146,7 @@ class _CommentPageState extends State<CommentPage> {
                                         ),
                                         onPressed:
                                             () => _deleteComment(commentId),
-                                        tooltip: "Obriši komentar",
+                                        tooltip: "Delete comment",
                                       ),
                                   ],
                                 ),
@@ -265,19 +262,14 @@ class _CommentPageState extends State<CommentPage> {
                         const SizedBox(width: 10.0),
                         GestureDetector(
                           onTap: () async {
-                            final uid =
-                                FirebaseAuth
-                                    .instance
-                                    .currentUser!
-                                    .uid; // ako već ne koristiš
+                            final uid = FirebaseAuth.instance.currentUser!.uid;
                             final addComment = {
-                              "OwnerUid": uid, // obavezno zbog security rules
-                              "UserId": uid, // ako ga koristiš u app-u
+                              "OwnerUid": uid,
+                              "UserId": uid,
                               "UserName": widget.username,
                               "UserImage": widget.userimage,
                               "Comment": commentcontroller.text.trim(),
-                              "CreatedAt":
-                                  FieldValue.serverTimestamp(), // ⬅️ DODANO
+                              "CreatedAt": FieldValue.serverTimestamp(),
                             };
 
                             await DatabaseMethods().addComment(

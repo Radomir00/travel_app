@@ -1,4 +1,3 @@
-// lib/pages/home.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +74,6 @@ class _HomeState extends State<Home> {
     }
   }
 
-  // ---------- LISTA POSTOVA (sa lokalnim filterom po searchu) ----------
   Widget _postsList() {
     if (postStream == null) {
       return const Center(child: CircularProgressIndicator());
@@ -162,7 +160,6 @@ class _HomeState extends State<Home> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Header (avatar + ime)
                       Padding(
                         padding: const EdgeInsets.only(
                           top: 20.0,
@@ -171,7 +168,6 @@ class _HomeState extends State<Home> {
                         ),
                         child: Row(
                           children: [
-                            // Avatar korisnika (bez boy.jpg fallbacka)
                             CircleAvatar(
                               radius: 25,
                               backgroundColor: Colors.blue.shade100,
@@ -206,7 +202,6 @@ class _HomeState extends State<Home> {
 
                       const SizedBox(height: 12),
 
-                      // Slika posta
                       AspectRatio(
                         aspectRatio: 16 / 9,
                         child: Image.network(
@@ -236,7 +231,6 @@ class _HomeState extends State<Home> {
 
                       const SizedBox(height: 6),
 
-                      // Lokacija
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
@@ -276,7 +270,6 @@ class _HomeState extends State<Home> {
 
                       const SizedBox(height: 8),
 
-                      // Akcije
                       Padding(
                         padding: const EdgeInsets.only(
                           left: 20.0,
@@ -363,7 +356,6 @@ class _HomeState extends State<Home> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ---------- HERO BANNER ----------
           Stack(
             children: [
               Image.asset(
@@ -381,7 +373,6 @@ class _HomeState extends State<Home> {
                 child: Row(
                   children: [
                     const Spacer(),
-                    // ADD
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -409,7 +400,6 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     const SizedBox(width: 10.0),
-                    // AVATAR → PROFILE (nema boy.jpg)
                     GestureDetector(
                       onTap: () async {
                         await Navigator.push(
@@ -497,7 +487,7 @@ class _HomeState extends State<Home> {
                     child: TextField(
                       controller: searchcontroller,
                       onChanged: (_) {
-                        if (mounted) setState(() {}); // odmah filtriraj lokalno
+                        if (mounted) setState(() {});
                       },
                       decoration: const InputDecoration(
                         border: InputBorder.none,
@@ -513,7 +503,6 @@ class _HomeState extends State<Home> {
 
           const SizedBox(height: 20.0),
 
-          // LISTA POSTOVA (filtrirana po searchu)
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(bottom: 8.0),

@@ -240,10 +240,9 @@ class _AddPageState extends State<AddPage> {
                             "Caption": captioncontroller.text,
                             "UserName": name,
                             "UserImage": image,
-                            "OwnerUid":
-                                uid, // ⬅️ VAŽNO: vlasnik posta (za rules)
+                            "OwnerUid": uid,
                             "CreatedAt": FieldValue.serverTimestamp(),
-                            "Like": <String>[], // prazna lista lajkova
+                            "Like": <String>[],
                           };
 
                           await DatabaseMethods().addPost(addPost, addId);

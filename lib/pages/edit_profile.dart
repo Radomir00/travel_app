@@ -93,8 +93,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     if (current.isEmpty && newPw.isEmpty && confirm.isEmpty) return;
 
-    if (newPw.length < 6) {
-      _showSnack(Colors.red, "New password must be at least 6 characters");
+    if (newPw.length < 8) {
+      _showSnack(Colors.red, "New password must be at least 8 characters");
       throw Exception("weak password");
     }
     if (newPw != confirm) {
@@ -175,7 +175,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       Navigator.pop(context);
     } catch (e) {
       debugPrint('[EditProfile] ERROR: $e');
-      _showSnack(Colors.red, "Update failed. Check console for details.");
+      _showSnack(Colors.red, "Update failed");
     } finally {
       if (!mounted) return;
       setState(() => _isSaving = false);
